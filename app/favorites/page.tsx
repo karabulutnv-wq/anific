@@ -9,7 +9,7 @@ export default async function FavoritesPage() {
   if (!session) redirect("/login");
 
   const favs = await prisma.favorite.findMany({
-    where: { userId: session.user.id },
+    where: { userId: session!.user!.id },
     include: { anime: { include: { _count: { select: { episodes: true } } } } },
     orderBy: { createdAt: "desc" },
   });
