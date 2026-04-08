@@ -80,7 +80,7 @@ export default async function EpisodePage({
           </div>
 
           {/* Comments */}
-          <Comments episodeId={episode.id} userId={session.user.id} />
+          <Comments episodeId={episode.id} userId={session?.user?.id} />
         </div>
       </div>
     </div>
