@@ -140,7 +140,7 @@ function DirectPlayer({ url, quality, onQualityChange }: { url: string; quality:
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [loading, setLoading] = useState(true);
-  const controlsTimer = useRef<ReturnType<typeof setTimeout>>();
+  const controlsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const hideControls = useCallback(() => {
     if (playing) setShowControls(false);
@@ -148,7 +148,7 @@ function DirectPlayer({ url, quality, onQualityChange }: { url: string; quality:
 
   function resetControlsTimer() {
     setShowControls(true);
-    clearTimeout(controlsTimer.current);
+    if (controlsTimer.current) clearTimeout(controlsTimer.current);
     controlsTimer.current = setTimeout(hideControls, 3000);
   }
 
