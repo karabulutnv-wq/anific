@@ -104,6 +104,7 @@ export default function Navbar() {
 
         <div className="hidden md:flex items-center gap-6 text-sm flex-shrink-0">
           <Link href="/anime" className="text-gray-300 hover:text-purple-400 transition-colors">Animeler</Link>
+          <Link href="/requests" className="text-gray-300 hover:text-purple-400 transition-colors">Anime İste</Link>
           <Link href="/pricing" className="text-gray-300 hover:text-purple-400 transition-colors">Üyelik</Link>
           {session?.user && (
             <>
