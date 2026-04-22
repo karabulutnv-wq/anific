@@ -8,11 +8,13 @@ interface Episode {
   number: number;
   title: string;
   quality: string;
+  videoUrl: string;
 }
 
 interface Anime {
   id: string;
   title: string;
+  slug: string;
   episodes: Episode[];
 }
 
@@ -25,14 +27,16 @@ export default function ManageAnimePage() {
   const [status, setStatus] = useState("");
 
   useEffect(() => {
-    fetch(`/api/admin/anime/${id}`).then((r) => r.json()).then(setAnime);
+    fetch(`/api/admin/anime/${id}`).then(r => r.json()).then(setAnime);
   }, [id]);
 
   async function addEpisode(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.videoUrl.trim()) { alert("Video URL gerekli"); return; }
+    if (!anime) return;
     setLoading(true);
-    setStatus("");
+
+    // Video URL: Sibnet/Drive linki veya otomatik local path
+    const videoUrl = form.videoUrl.trim() || `/videos/${anime.slug}/${form.number}.mp4`;
 
     const res = await fetch("/api/admin/episodes/save", {
       method: "POST",
@@ -42,19 +46,18 @@ export default function ManageAnimePage() {
         number: parseInt(form.number),
         title: form.title,
         quality: form.quality,
-        videoUrl: form.videoUrl,
+        videoUrl,
       }),
     });
 
     if (res.ok) {
       const ep = await res.json();
-      setAnime((prev) => prev ? { ...prev, episodes: [...prev.episodes, ep].sort((a,b) => a.number - b.number) } : prev);
+      setAnime(prev => prev ? { ...prev, episodes: [...prev.episodes, ep].sort((a, b) => a.number - b.number) } : prev);
       setForm({ number: "", title: "", quality: "FHD", videoUrl: "" });
-      setStatus("✅ Bölüm eklendi!");
-      setTimeout(() => setStatus(""), 3000);
+      setStatus(`✅ Bölüm eklendi! Dosyayı şuraya koy: public/videos/${anime.slug}/${form.number}.mp4`);
+      setTimeout(() => setStatus(""), 8000);
     } else {
-      const data = await res.json();
-      alert("Hata: " + data.error);
+      alert("Hata oluştu");
     }
     setLoading(false);
   }
@@ -62,9 +65,7 @@ export default function ManageAnimePage() {
   async function deleteEpisode(epId: string) {
     if (!confirm("Bu bölümü silmek istediğine emin misin?")) return;
     const res = await fetch(`/api/admin/episodes/${epId}`, { method: "DELETE" });
-    if (res.ok) {
-      setAnime((prev) => prev ? { ...prev, episodes: prev.episodes.filter(e => e.id !== epId) } : prev);
-    }
+    if (res.ok) setAnime(prev => prev ? { ...prev, episodes: prev.episodes.filter(e => e.id !== epId) } : prev);
   }
 
   if (!anime) return (
@@ -78,7 +79,14 @@ export default function ManageAnimePage() {
       <Navbar />
       <div className="pt-28 pb-20 px-4 max-w-4xl mx-auto">
         <button onClick={() => router.back()} className="text-purple-400 hover:text-purple-300 mb-6 block">← Geri</button>
-        <h1 className="text-2xl font-bold mb-8 text-purple-300">{anime.title} - Bölüm Yönetimi</h1>
+        <h1 className="text-2xl font-bold mb-2 text-purple-300">{anime.title} - Bölüm Yönetimi</h1>
+
+        {/* Bilgi kutusu */}
+        <div className="bg-blue-900/20 border border-blue-700/30 rounded-xl px-4 py-3 mb-8 text-sm text-blue-300">
+          📁 Video dosyalarını şu klasöre koy: <code className="bg-black/30 px-2 py-0.5 rounded">public/videos/{anime.slug}/[bolum-no].mp4</code>
+          <br />
+          <span className="text-blue-400/70 text-xs">Örnek: public/videos/{anime.slug}/1.mp4, 2.mp4, 3.mp4 ...</span>
+        </div>
 
         <div className="bg-[#1a1a2e] border border-purple-900/30 rounded-2xl p-6 mb-8">
           <h2 className="text-lg font-bold mb-4 text-white">Yeni Bölüm Ekle</h2>
@@ -89,7 +97,7 @@ export default function ManageAnimePage() {
                 <input
                   type="number"
                   value={form.number}
-                  onChange={(e) => setForm({ ...form, number: e.target.value })}
+                  onChange={e => setForm({ ...form, number: e.target.value })}
                   className="w-full bg-[#0a0a0f] border border-purple-900/40 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500"
                   required
                 />
@@ -98,7 +106,7 @@ export default function ManageAnimePage() {
                 <label className="block text-sm text-gray-400 mb-1">Kalite</label>
                 <select
                   value={form.quality}
-                  onChange={(e) => setForm({ ...form, quality: e.target.value })}
+                  onChange={e => setForm({ ...form, quality: e.target.value })}
                   className="w-full bg-[#0a0a0f] border border-purple-900/40 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500"
                 >
                   <option value="SD">SD (480p)</option>
@@ -114,7 +122,7 @@ export default function ManageAnimePage() {
               <input
                 type="text"
                 value={form.title}
-                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                onChange={e => setForm({ ...form, title: e.target.value })}
                 placeholder="örn: Luffy'nin Kararı"
                 className="w-full bg-[#0a0a0f] border border-purple-900/40 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500"
                 required
@@ -122,19 +130,23 @@ export default function ManageAnimePage() {
             </div>
 
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Video URL</label>
+              <label className="block text-sm text-gray-400 mb-1">Video URL (Sibnet veya Drive)</label>
               <input
-                type="url"
+                type="text"
                 value={form.videoUrl}
-                onChange={(e) => setForm({ ...form, videoUrl: e.target.value })}
-                placeholder="https://..."
+                onChange={e => setForm({ ...form, videoUrl: e.target.value })}
+                placeholder="https://video.sibnet.ru/video1234567"
                 className="w-full bg-[#0a0a0f] border border-purple-900/40 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500"
                 required
               />
-              <p className="text-xs text-gray-600 mt-1">Google Drive, Dropbox, Mega veya direkt video linki</p>
+              <p className="text-xs text-gray-600 mt-1">Sibnet video sayfası linki veya Google Drive linki</p>
             </div>
 
-            {status && <p className="text-sm text-center py-1">{status}</p>}
+            <div className="bg-[#0a0a0f] border border-purple-900/20 rounded-lg px-4 py-3 text-sm text-gray-500">
+              Video yolu otomatik: <span className="text-purple-400">/videos/{anime.slug}/{form.number || "?"}.mp4</span>
+            </div>
+
+            {status && <p className="text-sm text-center text-green-400 bg-green-900/20 border border-green-700/30 rounded-lg px-4 py-3">{status}</p>}
 
             <button
               type="submit"
@@ -154,11 +166,12 @@ export default function ManageAnimePage() {
             <div className="px-6 py-8 text-center text-gray-500">Henüz bölüm yok</div>
           ) : (
             <div className="divide-y divide-purple-900/10">
-              {anime.episodes.map((ep) => (
+              {anime.episodes.map(ep => (
                 <div key={ep.id} className="px-6 py-4 flex items-center justify-between">
                   <div>
                     <span className="text-purple-400 font-bold mr-3">#{ep.number}</span>
                     <span className="text-white">{ep.title}</span>
+                    <span className="text-gray-600 text-xs ml-3">{ep.videoUrl}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-xs bg-purple-900/40 text-purple-300 px-2 py-1 rounded-full">{ep.quality}</span>
