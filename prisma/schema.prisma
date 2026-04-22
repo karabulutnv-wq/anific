@@ -20,6 +20,8 @@ model User {
   favorites     Favorite[]
   ratings       Rating[]
   comments      Comment[]
+  animeRequests AnimeRequest[]
+  requestVotes  AnimeRequestVote[]
 }
 
 model Profile {
@@ -128,6 +130,26 @@ model AnimatedAvatar {
   name      String
   url       String
   createdAt DateTime @default(now())
+}
+
+model AnimeRequest {
+  id        String   @id @default(cuid())
+  title     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  votes     AnimeRequestVote[]
+  createdAt DateTime @default(now())
+}
+
+model AnimeRequestVote {
+  id        String       @id @default(cuid())
+  requestId String
+  request   AnimeRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+
+  @@unique([requestId, userId])
 }
 
 model PendingSubscription {
