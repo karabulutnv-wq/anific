@@ -131,7 +131,12 @@ export default async function HomePage() {
       </section>
 
       <footer className="py-8 text-center text-gray-700 text-sm border-t border-white/5">
-        © 2024 ANIFIC. Tüm hakları saklıdır.
+        <p>© 2024 ANIFIC. Tüm hakları saklıdır.</p>
+        <div className="flex justify-center gap-6 mt-3">
+          <Link href="/privacy" className="hover:text-gray-500 transition-colors">Gizlilik Politikası</Link>
+          <Link href="/pricing" className="hover:text-gray-500 transition-colors">Üyelik</Link>
+          <Link href="/requests" className="hover:text-gray-500 transition-colors">Anime İste</Link>
+        </div>
       </footer>
     </div>
   );
