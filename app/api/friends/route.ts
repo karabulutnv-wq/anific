@@ -22,7 +22,7 @@ export async function GET() {
 
   return NextResponse.json(friends.map(f => ({
     id: f.id,
-    friend: f.senderId === session.user.id ? f.receiver : f.sender,
+    friend: f.senderId === session!.user!.id ? f.receiver : f.sender,
   })));
 }
 
