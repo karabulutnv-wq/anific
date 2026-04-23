@@ -29,7 +29,7 @@ export default function FriendsPage() {
       fetch("/api/friends/requests").then(r => r.json()).then(setRequests);
 
       const pusher = getPusherClient();
-      const channel = pusher.subscribe(`user-${session!.user.id}`);
+      const channel = pusher.subscribe(`user-${session!.user!.id}`);
       channel.bind("friend-request", (data: FriendRequest) => {
         setRequests(prev => [data, ...prev]);
       });
