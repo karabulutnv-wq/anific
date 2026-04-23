@@ -45,7 +45,7 @@ export default function FriendsPage() {
     fetch(`/api/messages?friendId=${activeFriend.id}`).then(r => r.json()).then(setMessages);
 
     const pusher = getPusherClient();
-    const channelId = [session!.user.id, activeFriend.id].sort().join("-");
+    const channelId = [session!.user!.id, activeFriend.id].sort().join("-");
     const channel = pusher.subscribe(`dm-${channelId}`);
     channel.bind("new-message", (msg: Message) => {
       setMessages(prev => [...prev, msg]);
@@ -173,8 +173,8 @@ export default function FriendsPage() {
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-3">
                   {messages.map(msg => (
-                    <div key={msg.id} className={`flex ${msg.senderId === session?.user.id ? "justify-end" : "justify-start"}`}>
-                      <div className={`max-w-xs px-3 py-2 rounded-xl text-sm ${msg.senderId === session?.user.id ? "bg-purple-600 text-white" : "bg-[#0a0a0f] text-gray-200"}`}>
+                    <div key={msg.id} className={`flex ${msg.senderId === session?.user?.id ? "justify-end" : "justify-start"}`}>
+                      <div className={`max-w-xs px-3 py-2 rounded-xl text-sm ${msg.senderId === session?.user?.id ? "bg-purple-600 text-white" : "bg-[#0a0a0f] text-gray-200"}`}>
                         {msg.text}
                       </div>
                     </div>
