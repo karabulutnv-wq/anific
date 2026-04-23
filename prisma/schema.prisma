@@ -22,6 +22,11 @@ model User {
   comments      Comment[]
   animeRequests AnimeRequest[]
   requestVotes  AnimeRequestVote[]
+  sentFriendships     Friendship[] @relation("SentFriendships")
+  receivedFriendships Friendship[] @relation("ReceivedFriendships")
+  sentMessages        DirectMessage[] @relation("SentMessages")
+  receivedMessages    DirectMessage[] @relation("ReceivedMessages")
+  watchParties        WatchParty[]
 }
 
 model Profile {
@@ -77,6 +82,7 @@ model Episode {
   thumbnail    String?
   watchHistory WatchHistory[]
   comments     Comment[]
+  watchParties WatchParty[]
   createdAt    DateTime @default(now())
 }
 
@@ -132,6 +138,39 @@ model AnimatedAvatar {
   createdAt DateTime @default(now())
 }
 
+model Friendship {
+  id         String           @id @default(cuid())
+  senderId   String
+  sender     User             @relation("SentFriendships", fields: [senderId], references: [id], onDelete: Cascade)
+  receiverId String
+  receiver   User             @relation("ReceivedFriendships", fields: [receiverId], references: [id], onDelete: Cascade)
+  status     FriendshipStatus @default(PENDING)
+  createdAt  DateTime         @default(now())
+
+  @@unique([senderId, receiverId])
+}
+
+model DirectMessage {
+  id         String   @id @default(cuid())
+  senderId   String
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiverId String
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  text       String
+  createdAt  DateTime @default(now())
+}
+
+model WatchParty {
+  id        String   @id @default(cuid())
+  hostId    String
+  host      User     @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  episodeId String
+  episode   Episode  @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+  code      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
 model AnimeRequest {
   id        String   @id @default(cuid())
   title     String   @unique
@@ -158,6 +197,12 @@ model PendingSubscription {
   plan      SubscriptionPlan
   productId String
   createdAt DateTime @default(now())
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
 
 enum Role {
