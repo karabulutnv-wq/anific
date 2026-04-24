@@ -129,7 +129,6 @@ export default function Navbar() {
           {[
             { href: "/anime", label: "Animeler" },
             { href: "/requests", label: "Anime İste" },
-            { href: "/pricing", label: "Üyelik" },
             ...(session?.user ? [
               { href: "/friends", label: "Arkadaşlar" },
               { href: "/favorites", label: "Favoriler" },

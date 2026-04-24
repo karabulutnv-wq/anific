@@ -27,6 +27,7 @@ model User {
   sentMessages        DirectMessage[] @relation("SentMessages")
   receivedMessages    DirectMessage[] @relation("ReceivedMessages")
   watchParties        WatchParty[]
+  ownedAvatars        UserAvatar[]
 }
 
 model Profile {
@@ -131,11 +132,25 @@ model Comment {
   createdAt DateTime @default(now())
 }
 
+model UserAvatar {
+  id        String         @id @default(cuid())
+  userId    String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  avatarId  String
+  avatar    AnimatedAvatar @relation(fields: [avatarId], references: [id], onDelete: Cascade)
+  createdAt DateTime       @default(now())
+
+  @@unique([userId, avatarId])
+}
+
 model AnimatedAvatar {
-  id        String   @id @default(cuid())
-  name      String
-  url       String
-  createdAt DateTime @default(now())
+  id         String      @id @default(cuid())
+  name       String
+  url        String
+  price      Float       @default(0)
+  shopierUrl String?
+  owners     UserAvatar[]
+  createdAt  DateTime    @default(now())
 }
 
 model Friendship {

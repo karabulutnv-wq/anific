@@ -48,6 +48,9 @@ export default async function AdminPage() {
           <Link href="/admin/avatars" className="bg-purple-900/50 hover:bg-purple-800/50 border border-purple-700/50 px-6 py-3 rounded-xl font-medium transition-colors">
             🎭 Hareketli Profiller
           </Link>
+          <Link href="/admin/users" className="bg-purple-900/50 hover:bg-purple-800/50 border border-purple-700/50 px-6 py-3 rounded-xl font-medium transition-colors">
+            👥 Kullanıcı Yönetimi
+          </Link>
         </div>
 
         {/* Anime list */}
