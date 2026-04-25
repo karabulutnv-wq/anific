@@ -28,6 +28,8 @@ model User {
   receivedMessages    DirectMessage[] @relation("ReceivedMessages")
   watchParties        WatchParty[]
   ownedAvatars        UserAvatar[]
+  watchList           WatchList[]
+  userBadges          UserBadge[]
 }
 
 model Profile {
@@ -65,6 +67,8 @@ model Anime {
   episodes    Episode[]
   favorites   Favorite[]
   ratings     Rating[]
+  watchList   WatchList[]
+  schedule    AnimeSchedule[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
@@ -129,6 +133,54 @@ model Comment {
   episodeId String
   episode   Episode  @relation(fields: [episodeId], references: [id], onDelete: Cascade)
   text      String
+  createdAt DateTime @default(now())
+}
+
+model WatchList {
+  id        String        @id @default(cuid())
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  animeId   String
+  anime     Anime         @relation(fields: [animeId], references: [id], onDelete: Cascade)
+  status    WatchListStatus @default(WATCHING)
+  createdAt DateTime      @default(now())
+
+  @@unique([userId, animeId])
+}
+
+model Badge {
+  id          String      @id @default(cuid())
+  key         String      @unique
+  name        String
+  description String
+  icon        String
+  userBadges  UserBadge[]
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId   String
+  badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model AnimeSchedule {
+  id        String   @id @default(cuid())
+  animeId   String
+  anime     Anime    @relation(fields: [animeId], references: [id], onDelete: Cascade)
+  dayOfWeek Int
+  time      String?
   createdAt DateTime @default(now())
 }
 
@@ -212,6 +264,13 @@ model PendingSubscription {
   plan      SubscriptionPlan
   productId String
   createdAt DateTime @default(now())
+}
+
+enum WatchListStatus {
+  WATCHING
+  COMPLETED
+  PLAN_TO_WATCH
+  DROPPED
 }
 
 enum FriendshipStatus {
