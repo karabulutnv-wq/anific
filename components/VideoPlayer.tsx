@@ -2,8 +2,8 @@
 import { useEffect, useRef } from "react";
 
 function getVideoInfo(input: string): { type: "iframe" | "direct"; src: string } {
-  // Embed kodu (iframe HTML)
-  if (input.trim().startsWith("<iframe")) {
+  // Embed kodu - iframe içeren herhangi bir HTML
+  if (input.includes("<iframe")) {
     const match = input.match(/src=["']([^"']+)["']/);
     if (match) return { type: "iframe", src: match[1] };
   }
@@ -17,10 +17,12 @@ function getVideoInfo(input: string): { type: "iframe" | "direct"; src: string }
   if (sibnetMatch) return { type: "iframe", src: `https://video.sibnet.ru/shell.php?videoid=${sibnetMatch[1]}` };
   if (input.includes("sibnet.ru/shell.php")) return { type: "iframe", src: input };
 
-  // Dailymotion
+  // Dailymotion normal link
   const dmMatch = input.match(/dailymotion\.com\/video\/([a-zA-Z0-9]+)/);
   if (dmMatch) return { type: "iframe", src: `https://www.dailymotion.com/embed/video/${dmMatch[1]}?autoplay=0` };
-  if (input.includes("dailymotion.com/embed")) return { type: "iframe", src: input };
+  if (input.includes("dailymotion.com/embed") || input.includes("geo.dailymotion.com")) {
+    return { type: "iframe", src: input };
+  }
 
   // Direkt video dosyası → ArtPlayer
   return { type: "direct", src: input };
