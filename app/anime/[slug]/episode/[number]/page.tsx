@@ -5,6 +5,7 @@ import VideoPlayer from "@/components/VideoPlayer";
 import Navbar from "@/components/Navbar";
 import Comments from "@/components/Comments";
 import Link from "next/link";
+import WatchTracker from "@/components/WatchTracker";
 
 export default async function EpisodePage({
   params,
@@ -35,6 +36,7 @@ export default async function EpisodePage({
       <div className="pt-16">
         <div className="w-full bg-black">
           <VideoPlayer url={episode.videoUrl} />
+          <WatchTracker episodeId={episode.id} />
         </div>
 
         <div className="max-w-5xl mx-auto px-4 py-6">

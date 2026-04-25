@@ -21,6 +21,18 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ sl
   const session = await auth();
   const isLoggedIn = !!session;
 
+  // İzlenen bölümleri al
+  let watchedEpisodeIds: string[] = [];
+  if (session?.user?.id) {
+    const profiles = await prisma.profile.findMany({ where: { userId: session.user.id }, select: { id: true } });
+    const profileIds = profiles.map(p => p.id);
+    const history = await prisma.watchHistory.findMany({
+      where: { profileId: { in: profileIds }, episode: { animeId: anime.id } },
+      select: { episodeId: true },
+    });
+    watchedEpisodeIds = history.map(h => h.episodeId);
+  }
+
   let isFavorited = false;
   let userRating = null;
 
@@ -106,7 +118,12 @@ export default async function AnimeDetailPage({ params }: { params: Promise<{ sl
               isLoggedIn ? (
                 <Link key={ep.id} href={`/anime/${slug}/episode/${ep.number}`}
                   className="flex items-center gap-4 bg-[#1a1a2e] border border-purple-900/20 hover:border-purple-600/50 rounded-xl p-4 transition-all card-hover">
-                  <div className="w-12 h-12 rounded-lg bg-purple-900/40 flex items-center justify-center text-purple-400 font-bold flex-shrink-0">{ep.number}</div>
+                  <div className="w-12 h-12 rounded-lg bg-purple-900/40 flex items-center justify-center text-purple-400 font-bold flex-shrink-0 relative">
+                    {ep.number}
+                    {watchedEpisodeIds.includes(ep.id) && (
+                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full text-white text-xs flex items-center justify-center">✓</span>
+                    )}
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-white truncate">{ep.title}</p>
                     <p className="text-xs text-gray-500">{ep.quality} kalite</p>

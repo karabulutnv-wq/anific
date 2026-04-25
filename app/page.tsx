@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import { prisma } from "@/lib/prisma";
+import ContinueWatching from "@/components/ContinueWatching";
 
 export default async function HomePage() {
   const animes = await prisma.anime.findMany({
@@ -75,6 +76,9 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* Continue Watching */}
+      <ContinueWatching />
 
       {/* Latest Anime */}
       {animes.length > 0 && (
