@@ -17,6 +17,10 @@ function getVideoInfo(input: string): { type: "iframe" | "direct"; src: string }
   if (sibnetMatch) return { type: "iframe", src: `https://video.sibnet.ru/shell.php?videoid=${sibnetMatch[1]}` };
   if (input.includes("sibnet.ru/shell.php")) return { type: "iframe", src: input };
 
+  // Filemoon
+  const filemoonMatch = input.match(/filemoon\.[a-z]+\/(?:en|e)\/([a-zA-Z0-9]+)/);
+  if (filemoonMatch) return { type: "iframe", src: `https://filemoon.org/e/${filemoonMatch[1]}/` };
+
   // Dailymotion normal link
   const dmMatch = input.match(/dailymotion\.com\/video\/([a-zA-Z0-9]+)/);
   if (dmMatch) return { type: "iframe", src: `https://www.dailymotion.com/embed/video/${dmMatch[1]}?autoplay=0` };
