@@ -19,7 +19,7 @@ export default function ManageAnimePage() {
   const [tunnelUrl, setTunnelUrl] = useState("");
 
   useEffect(() => {
-    fetch(/api/admin/anime/+""+${id}+""+).then(r => r.json()).then(setAnime);
+    fetch(`/api/admin/anime/${id}`).then(r => r.json()).then(setAnime);
     const saved = localStorage.getItem("tunnelUrl");
     if (saved) setTunnelUrl(saved);
   }, [id]);
@@ -64,7 +64,7 @@ export default function ManageAnimePage() {
 
   async function deleteEpisode(epId: string) {
     if (!confirm("Silmek istediğine emin misin?")) return;
-    const res = await fetch(/api/admin/episodes/+""+${epId}+""+, { method: "DELETE" });
+    const res = await fetch(`/api/admin/episodes/${epId}`, { method: "DELETE" });
     if (res.ok) setAnime(prev => prev ? { ...prev, episodes: prev.episodes.filter(e=>e.id!==epId) } : prev);
   }
 
