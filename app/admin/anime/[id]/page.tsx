@@ -31,16 +31,14 @@ export default function ManageAnimePage() {
     if (videoFile) {
       if (!tunnelUrl) { alert("Tunnel URL gir!"); return; }
       setUploading(true); setUploadProgress(0); setStatus("Yukleniyor...");
-      const fd = new FormData();
-      fd.append("video", videoFile);
-      fd.append("tunnel", tunnelUrl);
       videoUrl = await new Promise<string>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.upload.onprogress = (ev) => { if (ev.lengthComputable) setUploadProgress(Math.round((ev.loaded/ev.total)*100)); };
-        xhr.onload = () => { if (xhr.status===200) resolve(JSON.parse(xhr.responseText).url); else reject(new Error("Hata")); };
+        xhr.onload = () => { if (xhr.status===200) resolve(JSON.parse(xhr.responseText).url); else reject(new Error("Sunucu hatasi: " + xhr.responseText)); };
         xhr.onerror = () => reject(new Error("Baglanti hatasi"));
         xhr.open("POST", tunnelUrl+"/upload");
-        xhr.send(fd);
+        xhr.setRequestHeader("X-Filename", encodeURIComponent(videoFile.name));
+        xhr.send(videoFile);
       }).catch(err => { alert(err.message); return ""; });
       setUploading(false);
       if (!videoUrl) return;
