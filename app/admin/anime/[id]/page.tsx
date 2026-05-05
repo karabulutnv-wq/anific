@@ -17,11 +17,14 @@ export default function ManageAnimePage() {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [tunnelUrl, setTunnelUrl] = useState("");
+  const [publicUrl, setPublicUrl] = useState("");
 
   useEffect(() => {
     fetch(`/api/admin/anime/${id}`).then(r => r.json()).then(setAnime);
     const saved = localStorage.getItem("tunnelUrl");
     if (saved) setTunnelUrl(saved);
+    const savedPublic = localStorage.getItem("publicUrl");
+    if (savedPublic) setPublicUrl(savedPublic);
   }, [id]);
 
   async function addEpisode(e: React.FormEvent) {
@@ -34,7 +37,7 @@ export default function ManageAnimePage() {
       videoUrl = await new Promise<string>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.upload.onprogress = (ev) => { if (ev.lengthComputable) setUploadProgress(Math.round((ev.loaded/ev.total)*100)); };
-        xhr.onload = () => { if (xhr.status===200) resolve(JSON.parse(xhr.responseText).url); else reject(new Error("Sunucu hatasi: " + xhr.responseText)); };
+        xhr.onload = () => { if (xhr.status===200) const data = JSON.parse(xhr.responseText); const localUrl = data.url; const filename = data.filename; resolve(publicUrl ? publicUrl.replace(/\\/+$/, '') + '/' + filename : localUrl); else reject(new Error("Sunucu hatasi: " + xhr.responseText)); };
         xhr.onerror = () => reject(new Error("Baglanti hatasi"));
         xhr.open("POST", tunnelUrl+"/upload");
         xhr.setRequestHeader("X-Filename", encodeURIComponent(videoFile.name));
@@ -80,6 +83,11 @@ export default function ManageAnimePage() {
             placeholder="https://xxxx.trycloudflare.com"
             style={{width:"100%",background:"rgba(0,0,0,0.3)",border:"1px solid rgba(124,58,237,0.3)",borderRadius:10,padding:"8px 12px",color:"white",fontSize:13,outline:"none"}} />
           <p style={{fontSize:11,color:"rgba(255,255,255,0.3)",marginTop:6}}>cloudflared tunnel --url http://localhost:8080</p>
+          <p style={{fontSize:13,color:"#a855f7",marginBottom:8,fontWeight:600,marginTop:12}}>Cloudflare Public URL (izleme icin)</p>
+          <input type="text" value={publicUrl} onChange={e=>{setPublicUrl(e.target.value);localStorage.setItem("publicUrl",e.target.value);}}
+            placeholder="https://xxxx.trycloudflare.com"
+            style={{width:"100%",background:"rgba(0,0,0,0.3)",border:"1px solid rgba(124,58,237,0.3)",borderRadius:10,padding:"8px 12px",color:"white",fontSize:13,outline:"none"}} />
+          <p style={{fontSize:11,color:"rgba(255,255,255,0.3)",marginTop:6}}>Cloudflare tunnel calisirken gozuken URL</p>
         </div>
         <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:20,padding:24,marginBottom:24}}>
           <h2 style={{fontSize:18,fontWeight:700,color:"white",marginBottom:20}}>Yeni Bolum Ekle</h2>
