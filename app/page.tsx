@@ -91,14 +91,9 @@ export default async function HomePage() {
               const avg = anime.ratings.length > 0 ? (anime.ratings.reduce((a, b) => a + b.score, 0) / anime.ratings.length).toFixed(1) : null;
               return (
                 <Link key={anime.id} href={`/anime/${anime.slug}`} style={{ textDecoration: "none", display: "block" }}>
-                  <div style={{ position: "relative", aspectRatio: "3/4", borderRadius: 16, overflow: "hidden", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", transition: "transform 0.2s, box-shadow 0.2s" }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-6px)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 20px 40px rgba(124,58,237,0.2)"; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "none"; }}>
+                  <div style={{ position: "relative", aspectRatio: "3/4", borderRadius: 16, overflow: "hidden", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
                     {anime.coverImage && <img src={anime.coverImage} alt={anime.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                     {avg && <div style={{ position: "absolute", top: 8, right: 8, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)", borderRadius: 8, padding: "3px 8px", fontSize: 11, fontWeight: 700, color: "#fbbf24" }}>⭐ {avg}</div>}
-                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%)", opacity: 0, transition: "opacity 0.2s" }}
-                      onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.opacity = "1"}
-                      onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.opacity = "0"} />
                   </div>
                   <p style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.8)", marginTop: 10, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{anime.title}</p>
                   <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>{anime._count.episodes} bölüm</p>
@@ -120,9 +115,7 @@ export default async function HomePage() {
             { icon: "💬", title: "Topluluk", desc: "Yorum yap, puan ver, tartış" },
             { icon: "🎭", title: "Özel Profiller", desc: "Hareketli avatarlar, kişisel liste" },
           ].map(f => (
-            <div key={f.title} style={{ padding: "24px 20px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 20, transition: "border-color 0.2s" }}
-              onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(124,58,237,0.3)"}
-              onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(255,255,255,0.06)"}>
+            <div key={f.title} style={{ padding: "24px 20px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 20 }}>
               <div style={{ fontSize: 32, marginBottom: 12 }}>{f.icon}</div>
               <div style={{ fontSize: 15, fontWeight: 700, color: "white", marginBottom: 6 }}>{f.title}</div>
               <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", lineHeight: 1.5 }}>{f.desc}</div>
