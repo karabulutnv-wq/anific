@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import { prisma } from "@/lib/prisma";
-import ContinueWatching from "@/components/ContinueWatching";
 
 export default async function HomePage() {
   const animes = await prisma.anime.findMany({
@@ -11,108 +10,98 @@ export default async function HomePage() {
   }).catch(() => []);
 
   return (
-    <div className="min-h-screen" style={{ background: "#070710" }}>
+    <div style={{ minHeight: "100vh", background: "#08080f", color: "#f0f0ff" }}>
       <Navbar />
 
       {/* Hero */}
-      <section className="relative pt-40 pb-32 px-4 overflow-hidden text-center">
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-20 left-1/4 w-96 h-96 rounded-full opacity-10" style={{ background: "radial-gradient(circle, #7c3aed, transparent)", filter: "blur(60px)" }} />
-          <div className="absolute top-40 right-1/4 w-80 h-80 rounded-full opacity-8" style={{ background: "radial-gradient(circle, #6d28d9, transparent)", filter: "blur(60px)" }} />
-        </div>
+      <section style={{ position: "relative", paddingTop: 160, paddingBottom: 120, textAlign: "center", overflow: "hidden" }}>
+        {/* Ambient glow */}
+        <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 800, height: 500, background: "radial-gradient(ellipse, rgba(124,58,237,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: 100, left: "20%", width: 300, height: 300, background: "radial-gradient(circle, rgba(168,85,247,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: 80, right: "15%", width: 250, height: 250, background: "radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
 
-        <div className="relative z-10 max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full text-sm font-medium text-purple-300 border border-purple-500/20" style={{ background: "rgba(124,58,237,0.1)" }}>
-            ✨ 4K Kalitede Anime Deneyimi
+        <div style={{ position: "relative", zIndex: 1, maxWidth: 700, margin: "0 auto", padding: "0 24px" }}>
+          {/* Badge */}
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.25)", borderRadius: 100, padding: "6px 16px", marginBottom: 32, fontSize: 13, color: "#c084fc" }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#a855f7", display: "inline-block" }} />
+            Türkiye'nin anime platformu
           </div>
 
-          <h1 className="text-8xl font-black mb-6 leading-none" style={{
-            background: "linear-gradient(135deg, #c084fc, #a855f7, #7c3aed)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}>
-            ANIFIC
-          </h1>
+          {/* Logo büyük */}
+          <div style={{ marginBottom: 24 }}>
+            <img src="/logo.svg" alt="ANIFIC" style={{ height: 56, margin: "0 auto" }} />
+          </div>
 
-          <p className="text-xl text-gray-400 mb-3 max-w-2xl mx-auto">
-            Binlerce anime, reklamsız izleme, arkadaşlarınla birlikte izle
+          <p style={{ fontSize: 20, color: "rgba(255,255,255,0.5)", marginBottom: 8, fontWeight: 400, lineHeight: 1.6 }}>
+            Binlerce anime, tek platformda.
           </p>
-          <p className="text-gray-600 mb-12">Ücretsiz kayıt ol, hemen izlemeye başla</p>
+          <p style={{ fontSize: 16, color: "rgba(255,255,255,0.25)", marginBottom: 48 }}>
+            Reklamsız, kesintisiz, arkadaşlarınla birlikte izle.
+          </p>
 
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Link href="/register"
-              className="px-8 py-3.5 rounded-2xl font-semibold text-white transition-all hover:scale-105 hover:shadow-2xl"
-              style={{ background: "linear-gradient(135deg, #7c3aed, #6d28d9)", boxShadow: "0 0 30px rgba(124,58,237,0.3)" }}>
-              Hemen Başla
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            <Link href="/register" style={{
+              display: "inline-block", padding: "14px 32px", borderRadius: 14,
+              background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
+              color: "white", fontWeight: 700, fontSize: 15, textDecoration: "none",
+              boxShadow: "0 0 40px rgba(124,58,237,0.3)",
+              transition: "all 0.2s",
+            }}>
+              Ücretsiz Başla
             </Link>
-            <Link href="/anime"
-              className="px-8 py-3.5 rounded-2xl font-semibold text-gray-300 border border-white/10 hover:border-purple-500/40 hover:text-white transition-all"
-              style={{ background: "rgba(255,255,255,0.04)" }}>
-              Animeleri Keşfet →
+            <Link href="/anime" style={{
+              display: "inline-block", padding: "14px 32px", borderRadius: 14,
+              background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+              color: "rgba(255,255,255,0.7)", fontWeight: 600, fontSize: 15, textDecoration: "none",
+            }}>
+              Animeleri Keşfet
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-20 px-4 max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {/* Stats */}
+      <section style={{ padding: "0 24px 80px", maxWidth: 900, margin: "0 auto" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
           {[
-            { icon: "🎬", title: "4K Kalite", desc: "Ultra HD görüntü, canlı renkler, akıcı izleme" },
-            { icon: "👥", title: "Arkadaşlarla İzle", desc: "Senkronize izleme, anlık chat, birlikte eğlen" },
-            { icon: "🎭", title: "Hareketli Profiller", desc: "Kişiselleştir, öne çık, tarzını göster" },
-            { icon: "⚡", title: "Hızlı & Akıcı", desc: "Anında yükleme, kesintisiz streaming" },
-            { icon: "🔍", title: "Akıllı Arama", desc: "Türe göre filtrele, istediğini hemen bul" },
-            { icon: "💬", title: "Topluluk", desc: "Yorum yap, puan ver, anime iste" },
-          ].map((f) => (
-            <div key={f.title}
-              className="rounded-2xl p-6 border transition-all hover:-translate-y-1 hover:shadow-2xl"
-              style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-              <div className="text-4xl mb-4">{f.icon}</div>
-              <h3 className="text-lg font-bold mb-2 text-white">{f.title}</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
+            { num: `${animes.length}+`, label: "Anime" },
+            { num: "4K", label: "Kalite" },
+            { num: "∞", label: "İzleme" },
+          ].map(s => (
+            <div key={s.label} style={{ textAlign: "center", padding: "28px 16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 20 }}>
+              <div style={{ fontSize: 36, fontWeight: 900, background: "linear-gradient(135deg, #c084fc, #7c3aed)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{s.num}</div>
+              <div style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", marginTop: 4 }}>{s.label}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Continue Watching */}
-      <ContinueWatching />
-
-      {/* Latest Anime */}
+      {/* Son eklenenler */}
       {animes.length > 0 && (
-        <section className="py-20 px-4 max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-10">
-            <h2 className="text-3xl font-black text-white">Son Eklenenler</h2>
-            <Link href="/anime" className="text-purple-400 hover:text-purple-300 text-sm font-medium transition-colors">
-              Tümünü Gör →
-            </Link>
+        <section style={{ padding: "0 24px 80px", maxWidth: 1280, margin: "0 auto" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28 }}>
+            <div>
+              <h2 style={{ fontSize: 22, fontWeight: 800, color: "white", margin: 0 }}>Son Eklenenler</h2>
+              <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginTop: 4 }}>En yeni bölümler seni bekliyor</p>
+            </div>
+            <Link href="/anime" style={{ fontSize: 13, color: "#a855f7", textDecoration: "none", fontWeight: 600 }}>Tümünü gör →</Link>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {animes.map((anime) => {
-              const avg = anime.ratings.length > 0
-                ? (anime.ratings.reduce((a, b) => a + b.score, 0) / anime.ratings.length).toFixed(1)
-                : null;
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 16 }}>
+            {animes.map(anime => {
+              const avg = anime.ratings.length > 0 ? (anime.ratings.reduce((a, b) => a + b.score, 0) / anime.ratings.length).toFixed(1) : null;
               return (
-                <Link key={anime.id} href={`/anime/${anime.slug}`}
-                  className="group transition-all hover:-translate-y-2 hover:shadow-2xl">
-                  <div className="aspect-[3/4] rounded-2xl overflow-hidden relative"
-                    style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.07)" }}>
-                    {anime.coverImage ? (
-                      <img src={anime.coverImage} alt={anime.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-4xl text-purple-800">🎌</div>
-                    )}
-                    {avg && (
-                      <div className="absolute top-2 right-2 text-yellow-400 text-xs font-bold px-2 py-1 rounded-lg" style={{ background: "rgba(0,0,0,0.8)" }}>
-                        ⭐ {avg}
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <Link key={anime.id} href={`/anime/${anime.slug}`} style={{ textDecoration: "none", display: "block" }}>
+                  <div style={{ position: "relative", aspectRatio: "3/4", borderRadius: 16, overflow: "hidden", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", transition: "transform 0.2s, box-shadow 0.2s" }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-6px)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 20px 40px rgba(124,58,237,0.2)"; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "none"; }}>
+                    {anime.coverImage && <img src={anime.coverImage} alt={anime.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                    {avg && <div style={{ position: "absolute", top: 8, right: 8, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)", borderRadius: 8, padding: "3px 8px", fontSize: 11, fontWeight: 700, color: "#fbbf24" }}>⭐ {avg}</div>}
+                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%)", opacity: 0, transition: "opacity 0.2s" }}
+                      onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.opacity = "1"}
+                      onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.opacity = "0"} />
                   </div>
-                  <p className="mt-3 text-sm font-semibold text-gray-300 truncate group-hover:text-white transition-colors">{anime.title}</p>
-                  <p className="text-xs text-gray-600">{anime._count.episodes} Bölüm</p>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.8)", marginTop: 10, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{anime.title}</p>
+                  <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>{anime._count.episodes} bölüm</p>
                 </Link>
               );
             })}
@@ -120,27 +109,46 @@ export default async function HomePage() {
         </section>
       )}
 
+      {/* Features */}
+      <section style={{ padding: "0 24px 80px", maxWidth: 1100, margin: "0 auto" }}>
+        <h2 style={{ fontSize: 22, fontWeight: 800, color: "white", marginBottom: 8, textAlign: "center" }}>Neden ANIFIC?</h2>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.3)", textAlign: "center", marginBottom: 40 }}>Anime izlemenin en iyi yolu</p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16 }}>
+          {[
+            { icon: "🎬", title: "4K Kalite", desc: "Ultra HD görüntü, canlı renkler" },
+            { icon: "👥", title: "Birlikte İzle", desc: "Arkadaşlarınla senkronize izle" },
+            { icon: "💬", title: "Topluluk", desc: "Yorum yap, puan ver, tartış" },
+            { icon: "🎭", title: "Özel Profiller", desc: "Hareketli avatarlar, kişisel liste" },
+          ].map(f => (
+            <div key={f.title} style={{ padding: "24px 20px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 20, transition: "border-color 0.2s" }}
+              onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(124,58,237,0.3)"}
+              onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(255,255,255,0.06)"}>
+              <div style={{ fontSize: 32, marginBottom: 12 }}>{f.icon}</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: "white", marginBottom: 6 }}>{f.title}</div>
+              <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", lineHeight: 1.5 }}>{f.desc}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* CTA */}
-      <section className="py-24 px-4 text-center">
-        <div className="max-w-2xl mx-auto rounded-3xl p-12 border"
-          style={{ background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.2)" }}>
-          <h2 className="text-3xl font-black text-white mb-4">Anime Dünyasına Katıl</h2>
-          <p className="text-gray-400 mb-8">Ücretsiz kayıt ol, binlerce anime izle</p>
-          <Link href="/register"
-            className="inline-block px-8 py-3.5 rounded-2xl font-semibold text-white transition-all hover:scale-105"
-            style={{ background: "linear-gradient(135deg, #7c3aed, #6d28d9)" }}>
-            Hemen Başla
+      <section style={{ padding: "0 24px 100px", maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
+        <div style={{ padding: "48px 32px", background: "rgba(124,58,237,0.06)", border: "1px solid rgba(124,58,237,0.15)", borderRadius: 28 }}>
+          <h2 style={{ fontSize: 26, fontWeight: 900, color: "white", marginBottom: 12 }}>Hemen başla</h2>
+          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 28 }}>Ücretsiz kayıt ol, binlerce anime izle</p>
+          <Link href="/register" style={{ display: "inline-block", padding: "14px 36px", borderRadius: 14, background: "linear-gradient(135deg, #7c3aed, #6d28d9)", color: "white", fontWeight: 700, fontSize: 15, textDecoration: "none" }}>
+            Kayıt Ol
           </Link>
         </div>
       </section>
 
-      <footer className="py-8 text-center text-gray-700 text-sm border-t border-white/5">
-        <p>© 2024 ANIFIC. Tüm hakları saklıdır.</p>
-        <div className="flex justify-center gap-6 mt-3">
-          <Link href="/privacy" className="hover:text-gray-500 transition-colors">Gizlilik Politikası</Link>
-          <Link href="/pricing" className="hover:text-gray-500 transition-colors">Üyelik</Link>
-          <Link href="/requests" className="hover:text-gray-500 transition-colors">Anime İste</Link>
+      <footer style={{ borderTop: "1px solid rgba(255,255,255,0.05)", padding: "24px", textAlign: "center" }}>
+        <div style={{ display: "flex", justifyContent: "center", gap: 24, marginBottom: 12, flexWrap: "wrap" }}>
+          <Link href="/privacy" style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", textDecoration: "none" }}>Gizlilik Politikası</Link>
+          <Link href="/requests" style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", textDecoration: "none" }}>Anime İste</Link>
+          <Link href="/pricing" style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", textDecoration: "none" }}>Üyelik</Link>
         </div>
+        <p style={{ fontSize: 12, color: "rgba(255,255,255,0.15)" }}>© 2024 ANIFIC. Tüm hakları saklıdır.</p>
       </footer>
     </div>
   );

@@ -85,11 +85,9 @@ export default function Navbar() {
           
           {/* Logo */}
           <Link href="/" style={{
-            fontSize: 18, fontWeight: 900, letterSpacing: "0.15em", flexShrink: 0, textDecoration: "none",
-            background: "linear-gradient(135deg, #c084fc, #7c3aed)",
-            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+            flexShrink: 0, textDecoration: "none",
           }}>
-            ANIFIC
+            <img src="/logo.svg" alt="ANIFIC" style={{ height: 28 }} />
           </Link>
 
           {/* Search - desktop */}
